@@ -1,0 +1,11 @@
+{
+  "name": "@typed-machine/core",
+  "version": "0.0.3",
+  "license": "MIT",
+  "exports": "./src/mod.ts",
+  "publish": {
+    "exclude": [
+      "./src/**/*.test.ts"
+    ]
+  }
+}
