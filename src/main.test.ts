@@ -144,6 +144,39 @@ Deno.test("machine", async (t) => {
     );
   });
 
+  await t.step("async transitions", async () => {
+    const asyncUserMachine = createMachine<
+      | User
+      | (BaseUser & {
+        status: "pending strict validation";
+        strictValidate: (email: string) => Promise<Validated>;
+      })
+    >({
+      transitions: {
+        ...userMachine.transitions,
+        strictValidate: async (prev, email) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          return { ...prev, status: "validated", email };
+        },
+      },
+      methods: userMachine.methods,
+    });
+    const userPending = asyncUserMachine.new({
+      name: "John",
+      age: 32,
+      status: "pending strict validation",
+    });
+
+    const userValidated = await userPending.strictValidate("john@domain.org");
+    assertType<IsExact<typeof userValidated, Validated>>(true);
+    assertEquals(getState(userValidated), {
+      age: 32,
+      email: "john@domain.org",
+      name: "John",
+      status: "validated",
+    });
+  });
+
   await t.step("methods", () => {
     const now = new Date();
     const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);

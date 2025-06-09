@@ -13,8 +13,14 @@ export const createMachine = <T>(
     >((acc, [name, transition]) => {
       acc[name] = (...args: any[]) => {
         const newState = transition(state, ...args);
-        implementation.onTransition?.(state, newState);
-        return _new(newState);
+        const resolveInstance = (resolvedState: any) => {
+          implementation.onTransition?.(state, resolvedState);
+          return _new(resolvedState);
+        };
+
+        return newState instanceof Promise
+          ? newState.then(resolveInstance)
+          : resolveInstance(newState);
       };
 
       return acc;

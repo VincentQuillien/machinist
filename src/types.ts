@@ -15,7 +15,7 @@ type GetParams<T, TFunctionKey extends string> = T extends {
 
 type GetReturn<T, TFunctionKey extends string> = T extends {
   [K in TFunctionKey]: (...args: any[]) => infer R;
-} ? State<R>
+} ? R extends Promise<infer R> ? Promise<State<R>> : State<R>
   : never;
 
 export type MachineImpl<
@@ -48,8 +48,8 @@ type Functions<T> = {
 };
 type Transitions<T, TFunctions> = {
   [
-    Key in keyof TFunctions as TFunctions[Key] extends (...args: any[]) => T
-      ? Key
+    Key in keyof TFunctions as TFunctions[Key] extends
+      (...args: any[]) => T | Promise<T> ? Key
       : never
   ]: TFunctions[Key];
 };
