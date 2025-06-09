@@ -35,5 +35,5 @@ export const createMachine = <T>(
     return { ...wrappedTransitions, ...wrappedMethods, ...state, _getState };
   };
 
-  return { new: _new, ...implementation };
+  return { ...implementation, new: _new } as Machine<T>;
 };

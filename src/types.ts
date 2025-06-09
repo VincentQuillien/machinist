@@ -68,4 +68,4 @@ export type Machine<T> = {
   new: <TState extends State<T>>(
     initialState: TState,
   ) => ExtractMember<T, TState>;
-} & Omit<MachineImpl<T>, "onTransition">;
+} & MachineImpl<T>;

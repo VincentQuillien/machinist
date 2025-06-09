@@ -165,8 +165,7 @@ Deno.test("machine", async (t) => {
     const onUserDeleted = spy();
 
     createMachine<User>({
-      transitions: userMachine.transitions,
-      methods: userMachine.methods,
+      ...userMachine,
       onTransition: (prev, next) => {
         if (prev.status === "locked" && next.status === "validated") {
           onUserUnlocked();
