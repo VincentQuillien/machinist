@@ -12,42 +12,42 @@ type BaseUser = {
   age: number;
 };
 
-type Pending = BaseUser & {
+type UserPending = BaseUser & {
   status: "pending";
 
-  validate(email: string): Validated;
+  validate(email: string): UserValidated;
 };
 
-type Validated = BaseUser & {
+type UserValidated = BaseUser & {
   status: "validated";
   email: string;
 
-  changeEmail(): Pending;
-  delete(reason: string): Deleted;
-  lock(days: number): Locked;
+  changeEmail(): UserPending;
+  delete(reason: string): UserDeleted;
+  lock(days: number): UserLocked;
 };
 
-type Locked = BaseUser & {
+type UserLocked = BaseUser & {
   status: "locked";
   days: number;
   lockStart: Date;
   email: string;
 
-  unlock(): Validated;
-  delete(reason: string): Deleted;
+  unlock(): UserValidated;
+  delete(reason: string): UserDeleted;
   getRemainingDays(): number;
 };
 
-type Deleted = BaseUser & {
+type UserDeleted = BaseUser & {
   status: "deleted";
   deletionReason: string;
   deletionDate: Date;
   email: string;
 
-  changeReason(reason: string): Deleted;
+  changeReason(reason: string): UserDeleted;
 };
 
-type User = Pending | Validated | Locked | Deleted;
+type User = UserPending | UserValidated | UserLocked | UserDeleted;
 
 Deno.test("machine", async (t) => {
   const userMachine = createMachine<User>({
@@ -83,7 +83,7 @@ Deno.test("machine", async (t) => {
       age: 32,
       status: "pending",
     });
-    assertType<IsExact<typeof userPending, Pending>>(true);
+    assertType<IsExact<typeof userPending, UserPending>>(true);
     assertEquals(getState(userPending), {
       age: 32,
       name: "John",
@@ -91,7 +91,7 @@ Deno.test("machine", async (t) => {
     });
 
     const userValidated = userPending.validate("john@domain.org");
-    assertType<IsExact<typeof userValidated, Validated>>(true);
+    assertType<IsExact<typeof userValidated, UserValidated>>(true);
     assertEquals(getState(userValidated), {
       age: 32,
       email: "john@domain.org",
@@ -100,18 +100,18 @@ Deno.test("machine", async (t) => {
     });
 
     const userPendingAgain = userValidated.changeEmail();
-    assertType<IsExact<typeof userPendingAgain, Pending>>(true);
+    assertType<IsExact<typeof userPendingAgain, UserPending>>(true);
     assertObjectMatch(
       getState(userPendingAgain),
       {
         age: 32,
         name: "John",
         status: "pending",
-      } satisfies State<Pending>,
+      } satisfies State<UserPending>,
     );
 
     const userLocked = userValidated.lock(7);
-    assertType<IsExact<typeof userLocked, Locked>>(true);
+    assertType<IsExact<typeof userLocked, UserLocked>>(true);
     assertEquals(getState(userLocked), {
       ...getState(userValidated),
       status: "locked",
@@ -120,7 +120,7 @@ Deno.test("machine", async (t) => {
     });
 
     const userDeleted = userLocked.delete("Competitor is better");
-    assertType<IsExact<typeof userDeleted, Deleted>>(true);
+    assertType<IsExact<typeof userDeleted, UserDeleted>>(true);
     assertObjectMatch(
       getState(userDeleted),
       {
@@ -130,17 +130,17 @@ Deno.test("machine", async (t) => {
         name: "John",
         email: "john@domain.org",
         age: 32,
-      } satisfies State<Deleted>,
+      } satisfies State<UserDeleted>,
     );
 
     const userNewDeletionReason = userDeleted.changeReason("Price is too high");
-    assertType<IsExact<typeof userNewDeletionReason, Deleted>>(true);
+    assertType<IsExact<typeof userNewDeletionReason, UserDeleted>>(true);
     assertObjectMatch(
       getState(userNewDeletionReason),
       {
         ...getState(userDeleted),
         deletionReason: "Price is too high",
-      } satisfies State<Deleted>,
+      } satisfies State<UserDeleted>,
     );
   });
 
@@ -149,7 +149,7 @@ Deno.test("machine", async (t) => {
       | User
       | (BaseUser & {
         status: "pending strict validation";
-        strictValidate: (email: string) => Promise<Validated>;
+        strictValidate: (email: string) => Promise<UserValidated>;
       })
     >({
       transitions: {
@@ -168,7 +168,7 @@ Deno.test("machine", async (t) => {
     });
 
     const userValidated = await userPending.strictValidate("john@domain.org");
-    assertType<IsExact<typeof userValidated, Validated>>(true);
+    assertType<IsExact<typeof userValidated, UserValidated>>(true);
     assertEquals(getState(userValidated), {
       age: 32,
       email: "john@domain.org",

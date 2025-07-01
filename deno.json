@@ -1,11 +1,6 @@
 {
-  "name": "@typed-machine/core",
-  "version": "0.0.4",
-  "license": "MIT",
-  "exports": "./src/mod.ts",
-  "publish": {
-    "exclude": [
-      "./src/**/*.test.ts"
+    "workspace": [
+        "./core",
+        "./react"
     ]
-  }
 }

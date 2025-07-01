@@ -1,0 +1,17 @@
+{
+  "name": "@typed-machine/react",
+  "version": "0.0.6",
+  "license": "MIT",
+  "exports": "./mod.ts",
+  "publish": {
+    "exclude": [
+      "./**/*.test.ts"
+    ]
+  },
+  "imports": {
+    "@testing-library/react-hooks": "npm:@testing-library/react-hooks@^8.0.1",
+    "@types/react": "npm:@types/react@^19.1.8",
+    "react": "npm:react@^19.1.0",
+    "react-test-renderer": "npm:react-test-renderer@^19.1.0"
+  }
+}

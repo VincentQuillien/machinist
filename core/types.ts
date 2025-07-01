@@ -1,8 +1,5 @@
 // deno-lint-ignore-file no-explicit-any ban-types
 
-type States<T, Discriminant extends keyof T> = {
-  [K in T[Discriminant] & string]: Extract<T, { [_ in Discriminant]: K }>;
-};
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I,
 ) => void ? I

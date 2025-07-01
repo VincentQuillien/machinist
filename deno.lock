@@ -1,11 +1,15 @@
 {
-  "version": "4",
+  "version": "5",
   "specifiers": {
     "jsr:@std/assert@*": "1.0.10",
     "jsr:@std/assert@^1.0.10": "1.0.10",
     "jsr:@std/datetime@*": "0.225.2",
     "jsr:@std/internal@^1.0.5": "1.0.5",
-    "jsr:@std/testing@*": "1.0.8"
+    "jsr:@std/testing@*": "1.0.8",
+    "npm:@testing-library/react-hooks@^8.0.1": "8.0.1_@types+react@19.1.8_react@19.1.0_react-test-renderer@19.1.0__react@19.1.0",
+    "npm:@types/react@^19.1.8": "19.1.8",
+    "npm:react-test-renderer@^19.1.0": "19.1.0_react@19.1.0",
+    "npm:react@^19.1.0": "19.1.0"
   },
   "jsr": {
     "@std/assert@1.0.10": {
@@ -25,6 +29,70 @@
       "dependencies": [
         "jsr:@std/assert@^1.0.10"
       ]
+    }
+  },
+  "npm": {
+    "@babel/runtime@7.27.6": {
+      "integrity": "sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q=="
+    },
+    "@testing-library/react-hooks@8.0.1_@types+react@19.1.8_react@19.1.0_react-test-renderer@19.1.0__react@19.1.0": {
+      "integrity": "sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==",
+      "dependencies": [
+        "@babel/runtime",
+        "@types/react",
+        "react",
+        "react-error-boundary",
+        "react-test-renderer"
+      ],
+      "optionalPeers": [
+        "@types/react",
+        "react-test-renderer"
+      ]
+    },
+    "@types/react@19.1.8": {
+      "integrity": "sha512-AwAfQ2Wa5bCx9WP8nZL2uMZWod7J7/JSplxbTmBQ5ms6QpqNYm672H0Vu9ZVKVngQ+ii4R/byguVEUZQyeg44g==",
+      "dependencies": [
+        "csstype"
+      ]
+    },
+    "csstype@3.1.3": {
+      "integrity": "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw=="
+    },
+    "react-error-boundary@3.1.4_react@19.1.0": {
+      "integrity": "sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==",
+      "dependencies": [
+        "@babel/runtime",
+        "react"
+      ]
+    },
+    "react-is@19.1.0": {
+      "integrity": "sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg=="
+    },
+    "react-test-renderer@19.1.0_react@19.1.0": {
+      "integrity": "sha512-jXkSl3CpvPYEF+p/eGDLB4sPoDX8pKkYvRl9+rR8HxLY0X04vW7hCm1/0zHoUSjPZ3bDa+wXWNTDVIw/R8aDVw==",
+      "dependencies": [
+        "react",
+        "react-is",
+        "scheduler"
+      ]
+    },
+    "react@19.1.0": {
+      "integrity": "sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg=="
+    },
+    "scheduler@0.26.0": {
+      "integrity": "sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA=="
+    }
+  },
+  "workspace": {
+    "members": {
+      "react": {
+        "dependencies": [
+          "npm:@testing-library/react-hooks@^8.0.1",
+          "npm:@types/react@^19.1.8",
+          "npm:react-test-renderer@^19.1.0",
+          "npm:react@^19.1.0"
+        ]
+      }
     }
   }
 }

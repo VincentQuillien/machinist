@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any ban-types
 
-import type { Machine, MachineImpl } from "../src/types.ts";
+import type { Machine, MachineImpl } from "../core/types.ts";
 
 export const createMachine = <T>(
   implementation: MachineImpl<T>,
