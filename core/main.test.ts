@@ -4,7 +4,7 @@ import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
 import { difference } from "jsr:@std/datetime/difference";
 
 import { createMachine } from "./createMachine.ts";
-import type { State } from "./types.ts";
+import type { DeclareMachine, Machine, State } from "./types.ts";
 import { getState } from "./getState.ts";
 
 type BaseUser = {
@@ -115,7 +115,7 @@ Deno.test("machine", async (t) => {
     assertEquals(getState(userLocked), {
       ...getState(userValidated),
       status: "locked",
-      lockStart: new Date(),
+      lockStart: userLocked.lockStart,
       days: 7,
     });
 
@@ -218,5 +218,82 @@ Deno.test("machine", async (t) => {
 
     assertSpyCalls(onUserUnlocked, 1);
     assertSpyCalls(onUserDeleted, 1);
+  });
+
+  await t.step("DeclareMachine type helper", () => {
+    type User2 = DeclareMachine<{
+      base: {
+        name: string;
+        age: number;
+      };
+      discriminant: "status";
+      states: {
+        pending: {
+          validate(email: string): User2["validated"];
+        };
+        validated: {
+          email: string;
+
+          changeEmail(): User2["pending"];
+          delete(reason: string): User2["deleted"];
+          lock(days: number): User2["locked"];
+        };
+        locked: {
+          days: number;
+          lockStart: Date;
+          email: string;
+
+          unlock(): User2["validated"];
+          delete(reason: string): User2["deleted"];
+          getRemainingDays(): number;
+        };
+        deleted: {
+          deletionReason: string;
+          deletionDate: Date;
+          email: string;
+
+          changeReason(reason: string): User2["deleted"];
+        };
+      };
+    }>;
+
+    type AreEquals<T, U> = [T] extends [U] ? ([U] extends [T] ? true : false)
+      : false;
+
+    assertType<AreEquals<UserPending, User2["pending"]>>(true);
+    assertType<AreEquals<UserValidated, User2["validated"]>>(true);
+    assertType<AreEquals<UserLocked, User2["locked"]>>(true);
+    assertType<AreEquals<UserDeleted, User2["deleted"]>>(true);
+    assertType<AreEquals<User, User2[string]>>(true);
+
+    const user2Machine = createMachine<User2>({
+      transitions: {
+        validate: (prev, email) => ({ ...prev, status: "validated", email }),
+        changeEmail: ({ ...prev }) => ({ ...prev, status: "pending" }),
+        changeReason: (prev, reason) => ({ ...prev, deletionReason: reason }),
+        delete: (prev, reason) => ({
+          ...prev,
+          status: "deleted",
+          deletionReason: reason,
+          deletionDate: new Date(),
+        }),
+        lock: (prev, days) => ({
+          ...prev,
+          status: "locked",
+          days,
+          lockStart: new Date(),
+        }),
+        unlock: (prev) => ({ ...prev, status: "validated" }),
+      },
+      methods: {
+        getRemainingDays: (state) => {
+          const daysSinceLock = difference(state.lockStart, new Date()).days ??
+            0;
+          return Math.max(0, state.days - daysSinceLock);
+        },
+      },
+    });
+
+    assertType<AreEquals<typeof userMachine, typeof user2Machine>>(true);
   });
 });

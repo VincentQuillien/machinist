@@ -61,8 +61,21 @@ type ExtractMember<
   Member = T extends any ? (U extends State<T> ? T : never) : never,
 > = [Member] extends [never] ? T : Member;
 
-export type Machine<T> = {
-  new: <TState extends State<T>>(
+export type InferUnion<T> = string extends keyof T ? T[string] : T;
+
+export type Machine<T, TUnion = InferUnion<T>> = {
+  new: <TState extends State<TUnion>>(
     initialState: TState,
-  ) => ExtractMember<T, TState>;
-} & MachineImpl<T>;
+  ) => ExtractMember<TUnion, TState>;
+} & MachineImpl<TUnion>;
+
+export type DeclareMachine<
+  T extends { base?: any; states: any; discriminant: string },
+  TRecord = {
+    [K in keyof T["states"]]:
+      & T["states"][K]
+      & { [Discriminant in T["discriminant"]]: K }
+      & T["base"];
+  },
+  TUnion = TRecord[keyof TRecord],
+> = TRecord & { [union: string]: TUnion };

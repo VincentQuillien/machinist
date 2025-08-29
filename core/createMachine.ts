@@ -1,9 +1,9 @@
 // deno-lint-ignore-file no-explicit-any ban-types
 
-import type { Machine, MachineImpl } from "../core/types.ts";
+import type { InferUnion, Machine, MachineImpl } from "../core/types.ts";
 
 export const createMachine = <T>(
-  implementation: MachineImpl<T>,
+  implementation: MachineImpl<InferUnion<T>>,
 ): Machine<T> => {
   const _new = (state: any) => {
     const wrappedTransitions = Object.entries<Function>(
