@@ -1,4 +1,4 @@
-import { createMachine, getState } from "@typed-machine/core";
+import { createMachine, getState } from "@machinist/core";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { assertEquals } from "jsr:@std/assert";
 

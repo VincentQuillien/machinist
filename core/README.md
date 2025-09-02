@@ -1,4 +1,4 @@
-<h1 style="text-align: center;">typed-machine</h1>
+<h1 style="text-align: center;">Machinist</h1>
 
 ### Type-driven finite state machines
 
@@ -7,15 +7,15 @@ Describe state machines with types, letting them drive implementation and usage.
 ### Installation
 
 ```bash
-deno add jsr:@typed-machine/core
-pnpm add jsr:@typed-machine/core
-yarn add jsr:@typed-machine/core
+deno add jsr:@machinist/core
+pnpm add jsr:@machinist/core
+yarn add jsr:@machinist/core
 
 # npm
-npx jsr add @typed-machine/core
+npx jsr add @machinist/core
 
 # bun
-bunx jsr add @typed-machine/core
+bunx jsr add @machinist/core
 ```
 
 ### Usage
@@ -178,13 +178,13 @@ createMachine<User>({
 
 ### React
 
-`@typed-machine/react` exports everything that's in `core`, plus a `useMachine`
+`@machinist/react` exports everything that's in `core`, plus a `useMachine`
 hook.\
 It takes a machine implementation and an initial state, and returns a reactive
 instance that will rerender the component on changes.
 
 ```tsx
-import { useMachine } from "@typed-machine/react";
+import { useMachine } from "@machinist/react";
 import { userMachine } from "./userMachine";
 
 const Component = () => {
@@ -219,7 +219,7 @@ type (if any), and finally to be added to the final union.
 The library provides a type helper `DeclareMachine` to simplify this process:
 
 ```ts
-import { createMachine, type DeclareMachine } from "@typed-machine/core";
+import { createMachine, type DeclareMachine } from "@machinist/core";
 
 export type User = DeclareMachine<{
   base: {
@@ -265,15 +265,14 @@ Immutability also makes it easier to historicize and compare previous states
 
 #### - What's the difference with XState?
 
-The main difference is that `XState` is event-driven while `typed-machine` is
-not.\
+The main difference is that `XState` is event-driven while `machinist` is not.\
 With `XState` the caller dispatches an event that will be interpreted by the
 machine, to potentially trigger a transition. If the machine doesn't define a
 transition for the current state and event, then the event is silently dropped.
 
-On the other hand with `typed-machine` the caller directly invokes the
-transition like a normal method, and it's up to the same caller to ensure that
-the machine is in a valid state before doing so.\
+On the other hand with `machinist` the caller directly invokes the transition
+like a normal method, and it's up to the same caller to ensure that the machine
+is in a valid state before doing so.\
 Thanks to discriminated unions the compiler can automatically narrow the type of
 the state inside of the condition, and list every valid transitions for the
 current state. That means no phantom events, the type of the new state is
@@ -281,7 +280,7 @@ statically known, and the caller is naturally nudged toward also handling the
 case where the machine is not in the desired state (e.g. not rendering the ban
 button if the user is already in the banned state).
 
-The other obvious difference is that `typed-machine` is a small library
-exporting two functions, while `XState` has a much larger API surface and bundle
-size. The latter also provides more functionality and has excellent
-documentation, tooling, and community support.
+The other obvious difference is that `machinist` is a small library exporting
+two functions, while `XState` has a much larger API surface and bundle size. The
+latter also provides more functionality and has excellent documentation,
+tooling, and community support.

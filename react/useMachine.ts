@@ -1,5 +1,5 @@
-import { createMachine } from "@typed-machine/core";
-import type { Machine, State } from "@typed-machine/core";
+import { createMachine } from "@machinist/core";
+import type { Machine, State } from "@machinist/core";
 import { useState } from "react";
 import type { InferUnion } from "../core/types.ts";
 

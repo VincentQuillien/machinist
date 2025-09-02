@@ -1,2 +1,2 @@
-export * from "@typed-machine/core";
+export * from "@machinist/core";
 export { useMachine } from "./useMachine.ts";

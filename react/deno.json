@@ -1,5 +1,5 @@
 {
-  "name": "@typed-machine/react",
+  "name": "@machinist/react",
   "version": "0.0.6",
   "license": "MIT",
   "exports": "./mod.ts",
