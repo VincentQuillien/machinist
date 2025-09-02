@@ -1,4 +1,4 @@
-<h1 style="text-align: center;">Machinist</h1>
+<h1 align="center">Machinist</h1>
 
 ### Type-driven finite state machines
 
@@ -83,6 +83,8 @@ To implement the transitions call the `createMachine` function with the machine
 as type argument:
 
 ```ts
+import { createMachine } from "@machinist/core";
+
 const userMachine = createMachine<User>({
   transitions: {
     lock: (user, reason) => ({ ...user, status: "locked", lockReason: reason }),
@@ -212,9 +214,10 @@ To support additional frameworks PRs are welcome!
 ### Type helper
 
 Declaring discriminated unions can be a bit verbose and unwieldy: every member
-is its own type declaration that needs to be exported, that needs the same
-discriminant key name as the others (e.g. `status`), to extend the common base
-type (if any), and finally to be added to the final union.
+needs to be declared as a separate type, that potentially needs to be exported.
+In each one of them the key of the discriminant property has to bear the exact
+same name (e.g. `status`). Finally they each need to extend the common base type
+(if any), and also not be omitted from the final union.
 
 The library provides a type helper `DeclareMachine` to simplify this process:
 
@@ -265,12 +268,12 @@ Immutability also makes it easier to historicize and compare previous states
 
 #### - What's the difference with XState?
 
-The main difference is that `XState` is event-driven while `machinist` is not.\
+The main difference is that `XState` is event-driven while `Machinist` is not.\
 With `XState` the caller dispatches an event that will be interpreted by the
 machine, to potentially trigger a transition. If the machine doesn't define a
 transition for the current state and event, then the event is silently dropped.
 
-On the other hand with `machinist` the caller directly invokes the transition
+On the other hand with `Machinist` the caller directly invokes the transition
 like a normal method, and it's up to the same caller to ensure that the machine
 is in a valid state before doing so.\
 Thanks to discriminated unions the compiler can automatically narrow the type of
@@ -280,7 +283,6 @@ statically known, and the caller is naturally nudged toward also handling the
 case where the machine is not in the desired state (e.g. not rendering the ban
 button if the user is already in the banned state).
 
-The other obvious difference is that `machinist` is a small library exporting
-two functions, while `XState` has a much larger API surface and bundle size. The
-latter also provides more functionality and has excellent documentation,
-tooling, and community support.
+The other obvious difference is that `Machinist` is a small library exporting
+two functions, while `XState` has a much larger API surface, bundle size, and
+number of supported features.
