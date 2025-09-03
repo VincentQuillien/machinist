@@ -2,6 +2,10 @@
 
 import type { InferUnion, Machine, MachineImpl } from "../core/types.ts";
 
+/**
+ * Implements the transitions and methods of a state machine.\
+ * Takes a state machine declaration as type parameter.
+ */
 export const createMachine = <T>(
   implementation: MachineImpl<InferUnion<T>>,
 ): Machine<T> => {
