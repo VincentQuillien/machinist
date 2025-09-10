@@ -51,6 +51,9 @@ type Transitions<T, TFunctions> = {
   ]: TFunctions[Key];
 };
 
+/**
+ * Extracts the type of the state from the machine, removing transitions and methods.
+ */
 export type State<T> = {
   [Key in keyof T as T[Key] extends Function ? never : Key]: T[Key];
 };
@@ -63,12 +66,18 @@ type ExtractMember<
 
 export type InferUnion<T> = string extends keyof T ? T[string] : T;
 
+/**
+ * State machine implementation
+ */
 export type Machine<T, TUnion = InferUnion<T>> = {
   new: <TState extends State<TUnion>>(
     initialState: TState,
   ) => ExtractMember<TUnion, TState>;
 } & MachineImpl<TUnion>;
 
+/**
+ * Declares a state machine and infers the discriminated union of states.
+ */
 export type DeclareMachine<
   T extends { base?: any; states: any; discriminant: string },
   TRecord = {
