@@ -76,6 +76,9 @@ if (user.status === "active") {
 > const bannedUser = activeUser.lock("reason").ban();
 > // activeUser !== bannedUser
 > ```
+>
+> Do not mutate the state directly, create dedicated transitions instead (can be
+> a self-transition if the type doesn't change).
 
 ### Implementation
 
